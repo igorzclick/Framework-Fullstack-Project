@@ -36,6 +36,10 @@ def categoria_jogador():
         else:
              return ' o jogador esta na categoria senior'
         
+@app.route('/teste')
+def teste():
+     return 'teste'
+
         
 
 
