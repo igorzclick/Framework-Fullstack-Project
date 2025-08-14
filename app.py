@@ -1,13 +1,11 @@
 from flask import Flask,request,jsonify
-# import requests
+#import requests
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return "App rodando"
-
-
 @app.route('/saudacao/<nome>')
 def saudacao(nome):
     return f"ola {nome}"
