@@ -4,10 +4,10 @@ from src.config.data_base import db
 
 class SellerService:
     @staticmethod
-    def create_seller(nome, CNPJ, email, celular, password):
-        new_seller = SellerDomain(nome, CNPJ, email, celular, password)
+    def create_seller(nome, cnpj, email, celular, password):
+        new_seller = SellerDomain(nome,  cnpj, email, celular, password)
         seller = Seller(nome=new_seller.nome,
-                        CNPJ=new_seller.CNPJ,
+                        CNPJ=new_seller.cnpj,
                         e_mail=new_seller.e_mail,
                         celular=new_seller.celular,
                         senha=new_seller.senha)
