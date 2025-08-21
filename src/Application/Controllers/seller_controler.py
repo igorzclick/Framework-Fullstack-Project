@@ -12,9 +12,9 @@ class SellerController:
         celular = data.get('celular')
         password = data.get('password')
 
-        # Validate required fields
-        required_fields = ['nome', 'CNPJ', 'email', 'celular', 'password']
-        for field in required_fields:
+# Validate required fields
+        seller_required_fields = ['nome', 'CNPJ', 'email', 'celular', 'password']
+        for field in seller_required_fields:
             if not data.get(field):
                 return make_response(jsonify({"error": f"{field} is required"}), 400)
 
