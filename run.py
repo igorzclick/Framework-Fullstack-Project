@@ -1,4 +1,4 @@
-from flask import Flask
+from apiflask import APIFlask
 from src.config.data_base import init_db
 from src.routes import init_routes
 
@@ -6,7 +6,7 @@ def create_app():
     """
     Função que cria e configura a aplicação Flask.
     """
-    app = Flask(__name__)
+    app = APIFlask(__name__)
 
     init_db(app)
 

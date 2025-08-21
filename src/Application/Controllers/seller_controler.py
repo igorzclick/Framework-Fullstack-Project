@@ -1,25 +1,28 @@
-from flask import request,jsonify, make_response
+from flask import request, jsonify, make_response
 from src.Application.Service.seller_service import SellerService
+from APIFlask import APIFlask, Schema
+from APIFlask.fields import String, Email
+from APIFlask.validators import Length
 
+class SellerRegisterSchema(Schema):
+    name = String(required=True, validate=Length(1))
+    cnpj = String(required=True, validate=Length(equal=14))  # Ajuste se quiser permitir formatação
+    email = Email(required=True)
+    cellphone = String(required=True, validate=Length(min=10))
+    password = String(required=True, validate=Length(min=6))
 
 class SellerController:
     @staticmethod
-    def register_seller():
-        data = request.get_json()
-        nome = data.get('nome')
-        cnpj = data.get('CNPJ')
-        email = data.get('email')
-        celular = data.get('celular')
-        password = data.get('password')
+    def register_seller(body: SellerRegisterSchema):
 
-# Validate required fields
-        seller_required_fields = ['nome', 'CNPJ', 'email', 'celular', 'password']
-        for field in seller_required_fields:
-            if not data.get(field):
-                return make_response(jsonify({"error": f"{field} is required"}), 400)
-
-        seller = SellerService.create_seller(nome, cnpj, email, celular, password)
+        seller = SellerService.create_seller(
+            body['name'],
+            body['cnpj'],
+            body['email'],
+            body['cellphone'],
+            body['password']
+        )
         return make_response(jsonify({
-            "mensagem": "Seller salvo com sucesso",
-            "vendedores": seller.to_dict()
+            "message": "Seller registered successfully",
+            "seller": seller.to_dict()
         }), 200)
