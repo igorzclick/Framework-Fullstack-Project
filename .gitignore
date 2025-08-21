@@ -22,5 +22,5 @@ env*/
 .env.*
 *.env
 
-.db/
 .db
+db
