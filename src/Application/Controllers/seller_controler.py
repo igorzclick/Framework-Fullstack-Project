@@ -1,8 +1,8 @@
 from flask import request, jsonify, make_response
 from src.Application.Service.seller_service import SellerService
-from APIFlask import APIFlask, Schema
-from APIFlask.fields import String, Email
-from APIFlask.validators import Length
+from apiflask import Schema
+from apiflask.fields import String, Email
+from apiflask.validators import Length
 
 class SellerRegisterSchema(Schema):
     name = String(required=True, validate=Length(1))

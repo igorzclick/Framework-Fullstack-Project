@@ -1,33 +1,37 @@
 services:
   db:
-    image: mysql:8.0.29
-    restart: unless-stopped
-    container_name: db
-    ports:
-      - "127.0.0.1:3306:${MYSQL_PORT}"
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes: 
-      - .db:/var/lib/mysql
+    ports:
+      - '127.0.0.1:3306:${MYSQL_PORT}'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   web:
     build:
-      context: . 
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - .:/src
     environment:
       FLASK_APP: run.py
       FLASK_ENV: development
-      MYSQL_HOST: db
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       - db
+
+volumes:
+  mysql_data:
