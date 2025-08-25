@@ -15,12 +15,6 @@ env/
 ENV/
 .venv*/
 venv*/
-env*/
 
 # Environment variables
 .env
-.env.*
-*.env
-
-./.db
-db
