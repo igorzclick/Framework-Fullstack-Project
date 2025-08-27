@@ -1,5 +1,7 @@
 from src.Application.Controllers.user_controller import UserController
-from flask import jsonify, make_response
+from src.Application.Controllers.seller_controler import SellerController
+from flask import jsonify, make_response, request
+from src.Application.Dto.seller_dto import SellerRegisterSchema
 
 def init_routes(app):    
     @app.route('/api', methods=['GET'])
@@ -12,5 +14,9 @@ def init_routes(app):
     def register_user():
         return UserController.register_user()
     
+    @app.route('/seller', methods=['POST'])
+    @app.input(SellerRegisterSchema, location='json')
+    def register_seller(body):
+        return SellerController.register_seller(body)
     
 
