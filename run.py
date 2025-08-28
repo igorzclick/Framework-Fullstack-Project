@@ -1,5 +1,7 @@
 from apiflask import APIFlask
 from src.config.data_base import init_db
+from src.Application.Dto.seller_dto import SellerRegisterSchema
+from src.Application.Service.seller_service import SellerService
 from src.routes import init_routes
 
 def create_app():

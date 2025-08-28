@@ -8,3 +8,6 @@ class SellerRegisterSchema(Schema):
     email = Email(required=True)
     cellphone = String(required=True, validate=Length(min=10))
     password = String(required=True, validate=Length(min=6))
+
+seller_schema = SellerRegisterSchema()
+sellers_schema = SellerRegisterSchema(many=True)
