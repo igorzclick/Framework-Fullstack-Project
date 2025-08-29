@@ -25,13 +25,15 @@ services:
     environment:
       FLASK_APP: run.py
       FLASK_ENV: development
-      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_HOST: db
       MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   mysql_data:
