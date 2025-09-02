@@ -6,7 +6,7 @@ from src.routes import init_routes
 
 def create_app():
     """
-    Função que cria e configura a aplicação Flask.
+    Fun o que cria e configura a aplica o Flask.
     """
     app = APIFlask(__name__)
 
@@ -19,4 +19,4 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

@@ -15,4 +15,4 @@ class SellerDomain:
             "cellphone": self.cellphone,
             "password": self.password,
             "status": self.status
-        }    
+        }
