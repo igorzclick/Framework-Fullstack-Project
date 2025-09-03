@@ -5,13 +5,82 @@ from src.config.data_base import db
 class SellerService:
     @staticmethod
     def create_seller(name, cnpj, email, cellphone, password):
-        new_seller = SellerDomain(name,  cnpj, email, cellphone, password)
-        seller = Seller(name=new_seller.name,
-                        cnpj=new_seller.cnpj,
-                        e_mail=new_seller.e_mail,
-                        cellphone=new_seller.cellphone,
-                        password=new_seller.password)
+        try:
+            new_seller = SellerDomain(name, cnpj, email, cellphone, password)
+
+            if Seller.query.filter_by(email=new_seller.email).first():
+                return None, "Email already registered"
+            if Seller.query.filter_by(cnpj=new_seller.cnpj).first():
+                return None, "CNPJ already registered"
+            if Seller.query.filter_by(cellphone=new_seller.cellphone).first():
+                return None, "Cellphone already registered"
+            
+            seller = Seller(
+                name=new_seller.name,
+                cnpj=new_seller.cnpj,
+                email=new_seller.email,
+                cellphone=new_seller.cellphone,
+                password=new_seller.password
+            )
+
+            db.session.add(seller)
+            db.session.commit()
+            return seller, None
+        except Exception as e:
+            db.session.rollback()
+            return None, str(e)
+    
+    @staticmethod
+    def get_all_sellers():
+        try:
+            sellers = Seller.query.all()        
+            return [seller.to_dict() for seller in sellers]
+        except Exception as e:
+            return None
+            
+    @staticmethod
+    def get_seller_by_id(id):
+        try:
+            seller = Seller.query.filter_by(id=id).first()        
+            return seller.to_dict()
+        except Exception as e:
+            return None
         
-        db.session.add(seller)
-        db.session.commit()
-        return seller
+    @staticmethod
+    def update_seller(id, name, cnpj, email, cellphone, password):
+        try:
+            seller = Seller.query.filter_by(id=id).first()
+
+            seller_by_email = Seller.query.filter_by(email=email).first()
+            if seller_by_email != None and seller_by_email.id != seller.id:
+                return None, "Email already registered"
+            seller_by_cpnj = Seller.query.filter_by(cnpj=cnpj).first()
+            if seller_by_cpnj != None and seller_by_cpnj.id != seller.id:
+                return None, "CNPJ already registered"
+            seller_by_cellphone = Seller.query.filter_by(cellphone=cellphone).first()
+            if seller_by_cellphone != None and seller_by_cellphone.id != seller.id:
+                return None, "Cellphone already registered"
+
+            if not seller:
+                return None, "Seller not found"
+            seller.name = name
+            seller.cnpj = cnpj
+            seller.email = email
+            seller.cellphone = cellphone
+            seller.password = password
+            db.session.commit()
+            return seller, None
+        except Exception as e:
+            return None, str(e)
+         
+    @staticmethod
+    def delete_seller(seller_id):
+        try:
+            seller = Seller.query.filter_by(id=seller_id).first()
+            if not seller:
+                return None
+            db.session.delete(seller)
+            db.session.commit()
+            return True
+        except Exception as e:
+            return None
