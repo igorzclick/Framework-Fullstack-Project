@@ -9,9 +9,11 @@ class SellerService:
             new_seller = SellerDomain(name, cnpj, email, cellphone, password)
 
             if Seller.query.filter_by(email=new_seller.email).first():
-                return None, "Email já cadastrado"
+                return None, "Email already registered"
             if Seller.query.filter_by(cnpj=new_seller.cnpj).first():
-                return None, "CNPJ já cadastrado"
+                return None, "CNPJ already registered"
+            if Seller.query.filter_by(cellphone=new_seller.cellphone).first():
+                return None, "Cellphone already registered"
             
             seller = Seller(
                 name=new_seller.name,
@@ -48,17 +50,28 @@ class SellerService:
     def update_seller(id, name, cnpj, email, cellphone, password):
         try:
             seller = Seller.query.filter_by(id=id).first()
+
+            seller_by_email = Seller.query.filter_by(email=email).first()
+            if seller_by_email != None and seller_by_email.id != seller.id:
+                return None, "Email already registered"
+            seller_by_cpnj = Seller.query.filter_by(cnpj=cnpj).first()
+            if seller_by_cpnj != None and seller_by_cpnj.id != seller.id:
+                return None, "CNPJ already registered"
+            seller_by_cellphone = Seller.query.filter_by(cellphone=cellphone).first()
+            if seller_by_cellphone != None and seller_by_cellphone.id != seller.id:
+                return None, "Cellphone already registered"
+
             if not seller:
-                return None
+                return None, "Seller not found"
             seller.name = name
             seller.cnpj = cnpj
             seller.email = email
             seller.cellphone = cellphone
             seller.password = password
             db.session.commit()
-            return seller
+            return seller, None
         except Exception as e:
-            return None
+            return None, str(e)
          
     @staticmethod
     def delete_seller(seller_id):
@@ -68,6 +81,6 @@ class SellerService:
                 return None
             db.session.delete(seller)
             db.session.commit()
-            return seller
+            return True
         except Exception as e:
             return None
