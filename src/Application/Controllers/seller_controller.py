@@ -14,12 +14,12 @@ class SellerController:
 
         if error_message:
             return make_response(jsonify({"message": error_message}), 400)
-        
+
         return make_response(jsonify({
             "message": "Seller registered successfully",
             "seller": seller.to_dict()
         }), 201)
-    
+
     @staticmethod
     def get_all_sellers():
         sellers = SellerService.get_all_sellers()
@@ -28,7 +28,7 @@ class SellerController:
         return make_response(jsonify({
             "sellers": sellers
         }), 200)
-    
+
     @staticmethod
     def get_seller_by_id(seller_id):
         seller = SellerService.get_seller_by_id(seller_id)
@@ -59,13 +59,13 @@ class SellerController:
             "message": "Seller updated successfully",
             "seller": seller.to_dict()
         }), 200)
-    
+
     @staticmethod
     def delete_seller(seller_id):
         seller = SellerService.delete_seller(seller_id)
         if not seller:
             return make_response(jsonify({"message": "Seller not found"}), 404)
-            
+
         return make_response(jsonify({
             "message": "Seller deleted successfully",
         }), 200)
