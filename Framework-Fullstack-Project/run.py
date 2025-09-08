@@ -1,0 +1,24 @@
+from apiflask import APIFlask
+from src.config.data_base import init_db
+from src.Application.Dto.seller_dto import SellerRegisterSchema
+from src.Application.Service.seller_service import SellerService
+from src.routes import init_routes
+from src.config.jwt_config import init_jwt
+
+def create_app():
+    """
+    Fun o que cria e configura a aplica o Flask.
+    """
+    app = APIFlask(__name__)
+
+    init_db(app)
+    init_jwt
+
+    init_routes(app)
+
+    return app
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
