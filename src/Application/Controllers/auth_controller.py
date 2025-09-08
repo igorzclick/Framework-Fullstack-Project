@@ -2,6 +2,7 @@ from flask import request, jsonify, make_response
 from flask_jwt_extended import create_access_token
 from src.Infrastructure.Model.seller_model import Seller
 from src.config.data_base import db
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 class AuthController:
     @staticmethod
@@ -22,8 +23,10 @@ class AuthController:
             return make_response(jsonify({"message": "Seller not active"}), 403)
 
         access_token = create_access_token(identity=seller.id)
+        refresh_token = create_refresh_token(identity=seller.id)
 
         return make_response(jsonify({
             "message": "Login successful",
             "access_token": access_token
+            "refresh_token": refresh_token 
         }), 200)

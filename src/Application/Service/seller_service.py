@@ -1,3 +1,6 @@
+import random
+from src.http.whats_app import send_whatsapp_message 
+from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller_model import Seller
 from src.config.data_base import db
@@ -25,6 +28,15 @@ class SellerService:
 
             db.session.add(seller)
             db.session.commit()
+
+            code = str(random.randint(1000, 9999))
+
+            seller_code = Seller_code(code=code, seller_id=seller.id)
+            db.session.add(seller_code)
+            db.session.commit()
+
+            send_whatsapp_message(seller.cellphone, code)
+            
             return seller, None
         except Exception as e:
             db.session.rollback()
