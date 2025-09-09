@@ -1,5 +1,5 @@
 import random
-from src.http.whats_app import send_whatsapp_message 
+from src.Infrastructure.http.whatsapp import send_whatsapp_message 
 from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller_model import Seller
