@@ -1,6 +1,6 @@
 from src.config.data_base import db
 
-class Seller_code(db.model):
+class Seller_code(db.Model):
     __tablename__ = 'seller_codes'
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(100), nullable=False)

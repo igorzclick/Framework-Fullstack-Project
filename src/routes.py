@@ -7,6 +7,8 @@ from src.Application.Dto.seller_dto import SellerRegisterSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from src.Infrastructure.Model.seller_model import Seller
 from src.Infrastructure.Model.seller_code_model import Seller_code
+from src.config.data_base import db
+
 
 
 def init_routes(app):    
@@ -66,16 +68,16 @@ def init_routes(app):
         cellphone = data.get("cellphone")
         code = data.get("code")
 
-    seller = Seller.query.filter_by(cellphone=cellphone).first()
-    if not seller:
-        return make_response(jsonify({"message": "seller not found"}), 404)
+        seller = Seller.query.filter_by(cellphone=seller.cellphone).first()
+        if not seller:
+            return make_response(jsonify({"message": "seller not found"}), 404)
 
-    seller_code = Seller_code.query.filter_by(seller_id=seller.id, code=code).first()
-    if not seller_code:
-        return make_response(jsonify({"message": "invalid code"}), 400)
+        seller_code = Seller_code.query.filter_by(seller_id=seller.id, code=seller.code).first()
+        if not seller_code:
+            return make_response(jsonify({"message": "invalid code"}), 400)
 
-    # aqui ele ativa seller
-    seller.status = "Ativo"
-    db.session.commit()
+        # aqui ele ativa seller
+        seller.status = "Ativo"
+        db.session.commit()
 
-    return make_response(jsonify({"message": "seller activated successfully"}), 200)
+        return make_response(jsonify({"message": "seller activated successfully"}), 200)
