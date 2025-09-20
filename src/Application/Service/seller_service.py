@@ -7,9 +7,8 @@ from src.config.data_base import db
 
 class SellerService:
     @staticmethod
-    def create_seller(name, cnpj, email, cellphone, password):
+    def create_seller(new_seller):
         try:
-            new_seller = SellerDomain(name, cnpj, email, cellphone, password)
 
             if Seller.query.filter_by(email=new_seller.email).first():
                 return None, "Email already registered"
@@ -59,30 +58,34 @@ class SellerService:
             return None
         
     @staticmethod
-    def update_seller(id, name, cnpj, email, cellphone, password):
+    def update_seller(id, update_seller):
         try:
             seller = Seller.query.filter_by(id=id).first()
 
-            seller_by_email = Seller.query.filter_by(email=email).first()
+            seller_by_email = Seller.query.filter_by(email=update_seller.email).first()
             if seller_by_email != None and seller_by_email.id != seller.id:
                 return None, "Email already registered"
-            seller_by_cpnj = Seller.query.filter_by(cnpj=cnpj).first()
+            seller_by_cpnj = Seller.query.filter_by(cnpj=update_seller.cnpj).first()
             if seller_by_cpnj != None and seller_by_cpnj.id != seller.id:
                 return None, "CNPJ already registered"
-            seller_by_cellphone = Seller.query.filter_by(cellphone=cellphone).first()
+            seller_by_cellphone = Seller.query.filter_by(cellphone=update_seller.cellphone).first()
             if seller_by_cellphone != None and seller_by_cellphone.id != seller.id:
                 return None, "Cellphone already registered"
 
             if not seller:
                 return None, "Seller not found"
-            seller.name = name
-            seller.cnpj = cnpj
-            seller.email = email
-            seller.cellphone = cellphone
-            seller.password = password
+            seller.name = update_seller.name
+            seller.cnpj = update_seller.cnpj
+            seller.email = update_seller.email
+            seller.cellphone = update_seller.cellphone
+            seller.password = update_seller.password
+            
             db.session.commit()
             return seller, None
+        
+        
         except Exception as e:
+            db.session.rollback()
             return None, str(e)
          
     @staticmethod
