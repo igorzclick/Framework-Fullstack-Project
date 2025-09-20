@@ -16,6 +16,7 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = "grupinho_2.0"
     app.config["JWT_ALGORITHM"] = "HS256"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
+    app.config["JWT_IDENTITY_CLAIM"] = "sub"
     jwt = JWTManager(app)
 
     init_db(app)

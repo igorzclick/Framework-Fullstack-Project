@@ -99,3 +99,25 @@ class SellerService:
             return True
         except Exception as e:
             return None
+    
+    @staticmethod
+    def activate_seller(cellphone, code):
+        try:
+            # Busca o seller pelo celular
+            seller = Seller.query.filter_by(cellphone=cellphone).first()
+            if not seller:
+                return None, "Seller not found"
+            
+            # Busca o código de ativação
+            seller_code = Seller_code.query.filter_by(seller_id=seller.id, code=code).first()
+            if not seller_code:
+                return None, "Invalid code"
+            
+            # Ativa o seller
+            seller.status = "Ativo"
+            db.session.commit()
+            
+            return seller, None
+        except Exception as e:
+            db.session.rollback()
+            return None, str(e)

@@ -22,8 +22,8 @@ class AuthController:
         if getattr(seller, "status", "Inativo") != "Ativo":
             return make_response(jsonify({"message": "Seller not active"}), 403)
 
-        access_token = create_access_token(identity=seller.id)
-        refresh_token = create_refresh_token(identity=seller.id)
+        access_token = create_access_token(identity=str(seller.id))
+        refresh_token = create_refresh_token(identity=str(seller.id))
 
         return make_response(jsonify({
             "message": "Login successful",
