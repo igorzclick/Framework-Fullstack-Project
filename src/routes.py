@@ -22,7 +22,7 @@ def init_routes(app):
     def register_user():
         return UserController.register_user()
 
-    # Rotas relacionadas à autenticação de usuários (login, refresh de token)
+    # Rotas relacionadas à autenticação de usuários
     @app.route('/auth/login', methods=['POST'])
     def login():
         return AuthController.login()
