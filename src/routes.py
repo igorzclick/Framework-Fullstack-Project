@@ -1,22 +1,20 @@
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask import jsonify, make_response, request
+
 from src.Application.Controllers.auth_controller import AuthController
 from src.Application.Controllers.seller_controller import SellerController
 from src.Application.Controllers.user_controller import UserController
-from flask import jsonify, make_response, request
 from src.Application.Dto.seller_dto import SellerRegisterSchema
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from src.Infrastructure.Model.seller_model import Seller
 from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.config.data_base import db
 
-
-
 def init_routes(app):    
+
     @app.route('/api', methods=['GET'])
     def health():
         return make_response(jsonify({
-            "mensagem": "API - OK; Docker - Up",
-        }), 200)
+            "mensagem": "API - OK; Docker - Up"}), 200)
     
     @app.route('/user', methods=['POST'])
     def register_user():
