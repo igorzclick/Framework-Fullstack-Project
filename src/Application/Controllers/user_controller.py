@@ -13,7 +13,10 @@ class UserController:
         user_required_fields=['nome','email','password']
         for field in user_required_fields:
             if not data.get(field):
-                return  make_response(jsonify({'error:' f'{field} is required '}),400)
+                return  make_response(
+                    jsonify({'error:' f'{field} is required '}),
+                    400
+                )
 
         
 
