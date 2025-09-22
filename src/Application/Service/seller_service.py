@@ -9,7 +9,7 @@ class SellerService:
     @staticmethod
     def create_seller(new_seller):
         try:
-
+            # Valida duplicidade de email, CNPJ e celular
             if Seller.query.filter_by(email=new_seller.email).first():
                 return None, "Email already registered"
             if Seller.query.filter_by(cnpj=new_seller.cnpj).first():
@@ -30,6 +30,7 @@ class SellerService:
 
             code = str(random.randint(1000, 9999))
 
+            # Associa o código ao seller e salva no banco
             seller_code = Seller_code(code=code, seller_id=seller.id)
             db.session.add(seller_code)
             db.session.commit()
