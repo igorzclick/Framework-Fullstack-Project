@@ -1,5 +1,6 @@
 from src.config.data_base import db
 
+# Classe que representa a tabela de sellers (vendedores)
 class Seller(db.Model):
     __tablename__ = 'sellers'
     id = db.Column(db.Integer, primary_key=True)
