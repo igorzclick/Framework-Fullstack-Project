@@ -110,7 +110,10 @@ class SellerService:
                 return None, "Seller not found"
             
             # Busca o código de ativação
-            seller_code = Seller_code.query.filter_by(seller_id=seller.id, code=code).first()
+            seller_code = Seller_code.query.filter_by(
+                seller_id=seller.id, 
+                code=code
+            ).first()
             if not seller_code:
                 return None, "Invalid code"
             
@@ -119,6 +122,7 @@ class SellerService:
             db.session.commit()
             
             return seller, None
+        
         except Exception as e:
             db.session.rollback()
             return None, str(e)
