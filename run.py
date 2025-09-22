@@ -27,5 +27,7 @@ def create_app():
 
 app = create_app()
 
-if __name__ == '__name__':
+# Arquivo principal que inicializa a aplicação Flask
+if __name__ == '__main__':
+    # Executa o servidor Flask em modo debug
     app.run(debug=True, host='0.0.0.0')
