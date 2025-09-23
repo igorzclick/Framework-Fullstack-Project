@@ -9,11 +9,14 @@ class UserController:
         email = data.get('email')
         password = data.get('password')
 
-        #validate required fields
+        # Valida se todos os campos obrigatórios foram preenchidos
         user_required_fields=['nome','email','password']
         for field in user_required_fields:
             if not data.get(field):
-                return  make_response(jsonify({'error:' f'{field} is required '}),400)
+                return  make_response(
+                    jsonify({'error:' f'{field} is required '}),
+                    400
+                )
 
         
 

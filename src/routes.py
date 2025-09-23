@@ -1,31 +1,31 @@
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask import jsonify, make_response, request
+
 from src.Application.Controllers.auth_controller import AuthController
 from src.Application.Controllers.seller_controller import SellerController
 from src.Application.Controllers.user_controller import UserController
-from flask import jsonify, make_response, request
 from src.Application.Dto.seller_dto import SellerRegisterSchema
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from src.Infrastructure.Model.seller_model import Seller
 from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.config.data_base import db
 
-
-
 def init_routes(app):    
+
     @app.route('/api', methods=['GET'])
     def health():
         return make_response(jsonify({
-            "mensagem": "API - OK; Docker - Up",
-        }), 200)
+            "mensagem": "API - OK; Docker - Up"}), 200)
     
     @app.route('/user', methods=['POST'])
     def register_user():
         return UserController.register_user()
-    
+
+    # Rotas relacionadas à autenticação de usuários
     @app.route('/auth/login', methods=['POST'])
     def login():
         return AuthController.login()
     
+    # Rotas responsáveis pelo gerenciamento de sellers
     @app.route('/seller/register', methods=['POST'])
     def register_seller():
         data = request.get_json()
@@ -60,24 +60,15 @@ def init_routes(app):
     @app.route("/auth/refresh", methods=["POST"])
     @jwt_required(refresh=True)
     def refresh():
-        return jsonify(access_token=create_access_token(identity=get_jwt_identity()))
+        return jsonify(access_token=create_access_token(identity=str(get_jwt_identity())))
     
     @app.route("/seller/activate", methods=["POST"])
     def activate_seller():
         data = request.get_json()
         cellphone = data.get("cellphone")
         code = data.get("code")
-
-        seller = Seller.query.filter_by(cellphone=seller.cellphone).first()
-        if not seller:
-            return make_response(jsonify({"message": "seller not found"}), 404)
-
-        seller_code = Seller_code.query.filter_by(seller_id=seller.id, code=seller.code).first()
-        if not seller_code:
-            return make_response(jsonify({"message": "invalid code"}), 400)
-
-        # aqui ele ativa seller
-        seller.status = "Ativo"
-        db.session.commit()
-
-        return make_response(jsonify({"message": "seller activated successfully"}), 200)
+        
+        if not cellphone or not code:
+            return make_response(jsonify({"message": "cellphone and code are required"}), 400)
+        
+        return SellerController.activate_seller(cellphone, code)
