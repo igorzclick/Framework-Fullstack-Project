@@ -7,10 +7,12 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 class AuthController:
     @staticmethod
     def login():
+        # Recebe os dados de login do request
         data = request.get_json()
         email = data.get("email")
         password = data.get("password")
 
+        # Verifica se email e senha foram informados
         if not email or not password:
             return make_response(jsonify({"message": "Email and password are required"}), 400)
 

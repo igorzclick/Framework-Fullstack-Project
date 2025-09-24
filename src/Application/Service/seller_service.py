@@ -128,4 +128,3 @@ class SellerService:
         except Exception as e:
             db.session.rollback()
             return None, str(e)
-            return None, str(e)
