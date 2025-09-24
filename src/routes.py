@@ -9,13 +9,12 @@ from src.Infrastructure.Model.seller_model import Seller
 from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.config.data_base import db
 
-def init_routes(app):    
-
+def init_routes(app):
     @app.route('/api', methods=['GET'])
     def health():
         return make_response(jsonify({
             "mensagem": "API - OK; Docker - Up"}), 200)
-    
+        
     @app.route('/user', methods=['POST'])
     def register_user():
         return UserController.register_user()

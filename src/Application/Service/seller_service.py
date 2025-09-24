@@ -4,6 +4,7 @@ from src.Infrastructure.Model.seller_code_model import Seller_code
 from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller_model import Seller
 from src.config.data_base import db
+from datetime import datetime
 
 class SellerService:
     @staticmethod
@@ -35,7 +36,7 @@ class SellerService:
             db.session.add(seller_code)
             db.session.commit()
 
-            send_whatsapp_message(seller.cellphone, code)
+            send_whatsapp_message(new_seller.cellphone, code)
             
             return seller, None
         except Exception as e:
@@ -45,7 +46,7 @@ class SellerService:
     @staticmethod
     def get_all_sellers():
         try:
-            sellers = Seller.query.all()        
+            sellers = Seller.query.filter_by(deleted_at=None).all()        
             return [seller.to_dict() for seller in sellers]
         except Exception as e:
             return None
@@ -53,7 +54,7 @@ class SellerService:
     @staticmethod
     def get_seller_by_id(id):
         try:
-            seller = Seller.query.filter_by(id=id).first()        
+            seller = Seller.query.filter_by(id=id, deleted_at=None).first()        
             return seller.to_dict()
         except Exception as e:
             return None
@@ -94,10 +95,11 @@ class SellerService:
         try:
             seller = Seller.query.filter_by(id=seller_id).first()
             if not seller:
-                return None
-            db.session.delete(seller)
+                return None, "Seller not found"
+            
+            seller.deleted_at = datetime.utcnow()
             db.session.commit()
-            return True
+            return True, 'Seller deleted successfully'
         except Exception as e:
             return None
     

@@ -6,7 +6,7 @@ from src.Domain.seller import SellerDomain
 class SellerController:
     @staticmethod
     def register_seller(body):
-        seller = Seller(
+        seller = SellerDomain(
             name = body['name'],
             cnpj = body['cnpj'],
             email = body['email'],
@@ -70,12 +70,27 @@ class SellerController:
 
     @staticmethod
     def delete_seller(seller_id):
-        seller = SellerService.delete_seller(seller_id)
+        seller, message = SellerService.delete_seller(seller_id)
         if not seller:
-            return make_response(jsonify({"message": "Seller not found"}), 404)
+            return make_response(jsonify({"message": message}), 404)
 
         return make_response(jsonify({
-            "message": "Seller deleted successfully",
+            "message": message,
+        }), 200)
+    
+    @staticmethod
+    def activate_seller(cellphone, code):
+        seller, error_message = SellerService.activate_seller(cellphone, code)
+        
+        if error_message:
+            return make_response(jsonify({"message": error_message}), 400)
+        
+        if not seller:
+            return make_response(jsonify({"message": "Seller not found"}), 404)
+        
+        return make_response(jsonify({
+            "message": "Seller activated successfully",
+            "seller": seller.to_dict()
         }), 200)
     
     @staticmethod
