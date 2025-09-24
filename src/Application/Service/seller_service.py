@@ -36,7 +36,7 @@ class SellerService:
             db.session.add(seller_code)
             db.session.commit()
 
-            send_whatsapp_message(cellphone, code)
+            send_whatsapp_message(new_seller.cellphone, code)
             
             return seller, None
         except Exception as e:
@@ -64,7 +64,7 @@ class SellerService:
         try:
             seller = Seller.query.filter_by(id=id).first()
 
-            seller_by_email = Seller.query.filter_by(email=email).first()
+            seller_by_email = Seller.query.filter_by(email=update_seller.email).first()
             if seller_by_email != None and seller_by_email.id != seller.id:
                 return None, "Email already registered"
             seller_by_cpnj = Seller.query.filter_by(cnpj=update_seller.cnpj).first()

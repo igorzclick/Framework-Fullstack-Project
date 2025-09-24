@@ -6,7 +6,7 @@ from src.Domain.seller import SellerDomain
 class SellerController:
     @staticmethod
     def register_seller(body):
-        seller = Seller(
+        seller = SellerDomain(
             name = body['name'],
             cnpj = body['cnpj'],
             email = body['email'],
