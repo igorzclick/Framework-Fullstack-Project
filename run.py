@@ -4,20 +4,15 @@ from src.Application.Dto.seller_dto import SellerRegisterSchema
 from src.Application.Service.seller_service import SellerService
 from src.routes import init_routes
 from src.config.jwt_config import JWTConfig
-from flask_jwt_extended import JWTManager
 
 def create_app():
-    """
-    Fun o que cria e configura a aplica o Flask.
-    """
- 
     app = APIFlask(__name__)
-    # Configure Flask-JWT-Extended
     app.config["JWT_SECRET_KEY"] = "grupinho_2.0"
     app.config["JWT_ALGORITHM"] = "HS256"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
     app.config["JWT_IDENTITY_CLAIM"] = "sub"
-    jwt = JWTManager(app)
+    
+    JWTConfig.initialize_jwt(app)
 
     init_db(app)
 
@@ -27,7 +22,5 @@ def create_app():
 
 app = create_app()
 
-# Arquivo principal que inicializa a aplicação Flask
 if __name__ == '__main__':
-    # Executa o servidor Flask em modo debug
     app.run(debug=True, host='0.0.0.0')

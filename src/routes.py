@@ -19,12 +19,15 @@ def init_routes(app):
     def register_user():
         return UserController.register_user()
 
-    # Rotas relacionadas à autenticação de usuários
     @app.route('/auth/login', methods=['POST'])
     def login():
         return AuthController.login()
     
-    # Rotas responsáveis pelo gerenciamento de sellers
+    @app.route('/auth/logout', methods=['POST'])
+    @jwt_required()
+    def logout():
+        return AuthController.logout()
+        
     @app.route('/seller/register', methods=['POST'])
     def register_seller():
         data = request.get_json()
@@ -43,17 +46,26 @@ def init_routes(app):
     @app.route("/seller/<int:seller_id>", methods=['GET'])
     @jwt_required()
     def get_seller_by_id(seller_id):
+        user_id = get_jwt_identity()
+        if int(user_id) != seller_id:
+            return make_response(jsonify({"message": "Access denied. You can only access your own data."}), 403)
         return SellerController.get_seller_by_id(seller_id)
     
     @app.route("/seller/<int:seller_id>", methods=['PUT'])
     @jwt_required()
     def update_seller(seller_id):
+        user_id = get_jwt_identity()
+        if int(user_id) != seller_id:
+            return make_response(jsonify({"message": "Access denied. You can only update your own data."}), 403)
         data = request.get_json()
         return SellerController.update_seller(data, seller_id)
     
     @app.route("/seller/<int:seller_id>", methods=['DELETE'])
     @jwt_required()
     def delete_seller(seller_id):
+        user_id = get_jwt_identity()
+        if int(user_id) != seller_id:
+            return make_response(jsonify({"message": "Access denied. You can only delete your own data."}), 403)
         return SellerController.delete_seller(seller_id)
     
     @app.route("/auth/refresh", methods=["POST"])
