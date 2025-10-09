@@ -1,18 +1,17 @@
 from flask import request, jsonify, make_response
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, get_jwt
 from src.Infrastructure.Model.seller_model import Seller
 from src.config.data_base import db
+from src.config.jwt_config import JWTConfig
 from flask_jwt_extended import create_access_token, create_refresh_token
 
 class AuthController:
     @staticmethod
     def login():
-        # Recebe os dados de login do request
         data = request.get_json()
         email = data.get("email")
         password = data.get("password")
 
-        # Verifica se email e senha foram informados
         if not email or not password:
             return make_response(jsonify({"message": "Email and password are required"}), 400)
 
@@ -32,3 +31,19 @@ class AuthController:
             "access_token": access_token,
             "refresh_token": refresh_token 
         }), 200)
+    
+    @staticmethod
+    def logout():
+        try:
+            jti = get_jwt()['jti']
+            
+            JWTConfig.revoke_token(jti)
+            
+            return make_response(jsonify({
+                "message": "Logout successful. Token has been revoked."
+            }), 200)
+        except Exception as e:
+            return make_response(jsonify({
+                "message": "Error during logout",
+                "error": str(e)
+            }), 500)
