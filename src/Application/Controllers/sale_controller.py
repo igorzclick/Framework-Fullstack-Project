@@ -16,8 +16,11 @@ class SaleController:
             price=body['price']
         )
 
-        created_sale = SaleService.create_sale(sale)
+        created_sale, error_message = SaleService.create_sale(sale)
 
+        if error_message:
+            return make_response(jsonify({"message": error_message}), 400)
+        
         return make_response(jsonify({
             "message": "Sale created successfully",
             "sale": created_sale.to_dict()
