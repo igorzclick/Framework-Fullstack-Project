@@ -15,7 +15,8 @@ class ProductService:
                 name = new_product.name,
                 price = new_product.price,
                 quantity = new_product.quantity,
-                img = new_product.img
+                img = new_product.img,
+                status = "Ativo"
             )
 
             db.session.add(product)
@@ -52,7 +53,11 @@ class ProductService:
             product.price = product_domain.price
             product.quantity = product_domain.quantity
             product.img = product_domain.img
-            product.status = product_domain.status
+            
+            if product_domain.quantity == 0:
+                product.status = "Inativo"
+            else:
+                product.status = product_domain.status
 
             db.session.commit()
             return product, None

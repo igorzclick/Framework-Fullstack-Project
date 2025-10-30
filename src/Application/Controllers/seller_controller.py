@@ -45,7 +45,6 @@ class SellerController:
 
     @staticmethod
     def update_seller(body, seller_id):
-        # monta o objeto de domínio
         seller_domain = SellerDomain(
             name=body.get('name'),
             cnpj=body.get('cnpj'),
@@ -54,7 +53,6 @@ class SellerController:
             password=body.get('password')
         )
 
-        # passa o objeto para a service
         seller, error_message = SellerService.update_seller(seller_id, seller_domain)
 
         if error_message:

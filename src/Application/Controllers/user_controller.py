@@ -9,7 +9,6 @@ class UserController:
         email = data.get('email')
         password = data.get('password')
 
-        # Valida se todos os campos obrigatórios foram preenchidos
         user_required_fields=['nome','email','password']
         for field in user_required_fields:
             if not data.get(field):
