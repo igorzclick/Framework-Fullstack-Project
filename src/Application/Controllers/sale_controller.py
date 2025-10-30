@@ -13,7 +13,7 @@ class SaleController:
             seller_id=seller_id,
             product_id=body['product_id'],
             quantity=body['quantity'],
-            price=body['price']
+            price=0
         )
 
         created_sale, error_message = SaleService.create_sale(sale)

@@ -6,7 +6,7 @@ class Product(db.Model):
     seller_id = db.Column(db.Integer, db.ForeignKey('sellers.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
     img = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(20), default="Inativo")
     

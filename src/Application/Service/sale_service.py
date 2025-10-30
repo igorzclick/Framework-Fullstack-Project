@@ -10,13 +10,17 @@ class SaleService:
             if not product:
                 return None, "Product not found"
             
-            if product.quantity <= sale.quantity:
+            if int(sale.quantity) > int(product.quantity):
                 return None, f"Insufficient quantity. Available: {product.quantity}, Requested: {sale.quantity}"
+            
+            sale.price = product.price * sale.quantity
             
             product.quantity -= sale.quantity
             
             if product.quantity == 0:
                 product.status = "Inativo"
+
+            sale.price = product.price * sale.quantity
             
             new_sale = Sale(
                 seller_id=sale.seller_id,
