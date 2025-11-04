@@ -4,6 +4,7 @@ from src.Application.Dto.seller_dto import SellerRegisterSchema
 from src.Application.Service.seller_service import SellerService
 from src.routes import init_routes
 from src.config.jwt_config import JWTConfig
+from flask_cors import CORS
 
 def create_app():
     app = APIFlask(__name__)
@@ -11,6 +12,7 @@ def create_app():
     app.config["JWT_ALGORITHM"] = "HS256"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
     app.config["JWT_IDENTITY_CLAIM"] = "sub"
+    CORS(app)
     
     JWTConfig.initialize_jwt(app)
 
