@@ -28,7 +28,11 @@ class SaleController:
     
     @staticmethod
     def get_all_sales():
-        sales = SaleService.get_all_sales()
+        from flask import request
+        
+        period = request.args.get('period', 'all')
+        sales = SaleService.get_all_sales(period)
+        
         if sales is None:
             return make_response(jsonify({"message": "Could not retrieve sales"}), 500)
         return make_response(jsonify({
