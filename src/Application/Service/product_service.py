@@ -80,3 +80,16 @@ class ProductService:
             db.session.rollback()
             return None, str(e)
     
+    @staticmethod
+    def get_low_stock_products(limit: int = 5, threshold: int = 10):
+        try:
+            products = (
+                Product.query
+                .filter(Product.quantity < threshold)
+                .order_by(Product.quantity.asc())
+                .limit(limit)
+                .all()
+            )
+            return [product.to_dict() for product in products]
+        except Exception:
+            return []

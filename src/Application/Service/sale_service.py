@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from src.Infrastructure.Model.sale_model import Sale
 from src.Infrastructure.Model.product_model import Product
 from src.config.data_base import db
@@ -85,3 +86,73 @@ class SaleService:
         except Exception as e:
             db.session.rollback()
             return None
+
+    @staticmethod
+    def get_top_selling_products(limit: int = 5):
+        try:
+            results = (
+                db.session.query(
+                    Product,
+                    db.func.sum(Sale.quantity).label("total_sold")
+                )
+                .join(Sale, Sale.product_id == Product.id)
+                .group_by(Product.id)
+                .order_by(db.desc("total_sold"))
+                .limit(limit)
+                .all()
+            )
+            top_products = []
+            for product, total_sold in results:
+                data = product.to_dict()
+                data["total_sold"] = int(total_sold or 0)
+                data["revenue"] = float((product.price or 0) * (total_sold or 0))
+                top_products.append(data)
+            return top_products
+        except Exception:
+            return []
+
+    @staticmethod
+    def sum_sales_between(start_dt: datetime, end_dt: datetime):
+        total = (
+            db.session.query(db.func.coalesce(db.func.sum(Sale.price), 0.0))
+            .filter(Sale.created_at >= start_dt, Sale.created_at < end_dt)
+            .scalar()
+        )
+        return float(total or 0.0)
+
+    @staticmethod
+    def get_sales_summary():
+        now = datetime.now()
+        start_today = datetime(now.year, now.month, now.day)
+        start_yesterday = start_today - timedelta(days=1)
+        start_week = start_today - timedelta(days=7)
+        end_today = start_today + timedelta(days=1)
+
+        revenue_today = SaleService.sum_sales_between(start_today, end_today)
+        revenue_yesterday = SaleService.sum_sales_between(start_yesterday, start_today)
+        revenue_week = SaleService.sum_sales_between(start_week, end_today)
+
+        return {
+            "revenue_today": revenue_today,
+            "revenue_yesterday": revenue_yesterday,
+            "revenue_week": revenue_week
+        }
+
+    @staticmethod
+    def get_dashboard_metrics():
+        now = datetime.now()
+        start_today = datetime(now.year, now.month, now.day)
+        end_today = start_today + timedelta(days=1)
+        start_month = datetime(now.year, now.month, 1)
+
+        all_time_revenue = (
+            db.session.query(db.func.coalesce(db.func.sum(Sale.price), 0.0)).scalar()
+        )
+        revenue_today = SaleService.sum_sales_between(start_today, end_today)
+        revenue_month = SaleService.sum_sales_between(start_month, end_today)
+
+        return {
+            "balance": float(all_time_revenue or 0.0),
+            "revenue_today": revenue_today,
+            "revenue_month": revenue_month
+        }

@@ -74,3 +74,19 @@ class SaleController:
             "message": message,
         }), 200)
     
+    @staticmethod
+    def get_top_selling_products():
+        products = SaleService.get_top_selling_products(limit=5)
+        return make_response(jsonify({
+            "products": products
+        }), 200)
+
+    @staticmethod
+    def get_sales_summary():
+        summary = SaleService.get_sales_summary()
+        return make_response(jsonify(summary), 200)
+
+    @staticmethod
+    def get_dashboard_metrics():
+        metrics = SaleService.get_dashboard_metrics()
+        return make_response(jsonify(metrics), 200)

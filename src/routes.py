@@ -169,3 +169,36 @@ def init_routes(app):
         if not user_id:
             return make_response(jsonify({"message": "Access denied. You must be logged in to delete sales."}), 403)
         return SaleController.delete_sale(sale_id)
+
+    # Dashboard endpoints
+    @app.route("/dashboard/low-stock", methods=['GET'])
+    @jwt_required()
+    def dashboard_low_stock():
+        user_id = get_jwt_identity()
+        if not user_id:
+            return make_response(jsonify({"message": "Access denied."}), 403)
+        return ProductController.get_low_stock_products()
+
+    @app.route("/dashboard/top-products", methods=['GET'])
+    @jwt_required()
+    def dashboard_top_products():
+        user_id = get_jwt_identity()
+        if not user_id:
+            return make_response(jsonify({"message": "Access denied."}), 403)
+        return SaleController.get_top_selling_products()
+
+    @app.route("/dashboard/sales-summary", methods=['GET'])
+    @jwt_required()
+    def dashboard_sales_summary():
+        user_id = get_jwt_identity()
+        if not user_id:
+            return make_response(jsonify({"message": "Access denied."}), 403)
+        return SaleController.get_sales_summary()
+
+    @app.route("/dashboard/metrics", methods=['GET'])
+    @jwt_required()
+    def dashboard_metrics():
+        user_id = get_jwt_identity()
+        if not user_id:
+            return make_response(jsonify({"message": "Access denied."}), 403)
+        return SaleController.get_dashboard_metrics()

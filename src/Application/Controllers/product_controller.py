@@ -70,3 +70,10 @@ class ProductController:
         return make_response(jsonify({
             "message": message,
         }), 200)
+
+    @staticmethod
+    def get_low_stock_products():
+        products = ProductService.get_low_stock_products(limit=5, threshold=10)
+        return make_response(jsonify({
+            "products": products
+        }), 200)
